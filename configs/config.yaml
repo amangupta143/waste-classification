@@ -1,0 +1,7 @@
+# Configuration file for the project
+project_name: waste_classification
+num_classes: 9
+image_size: [224, 224]
+batch_size: 32
+epochs: 50
+learning_rate: 0.001
