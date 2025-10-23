@@ -1,1 +1,2 @@
 results/processed_data/*.npy filter=lfs diff=lfs merge=lfs -text
+results/models/*.h5 filter=lfs diff=lfs merge=lfs -text

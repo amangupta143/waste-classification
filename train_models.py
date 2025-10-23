@@ -56,7 +56,52 @@ class WasteModelTrainer:
     
     def create_custom_cnn(self, name='CustomCNN'):
         """
-        Create a custom CNN architecture
+        Create an improved custom CNN architecture with BatchNormalization
+        Inspired by best practices from successful models
+        
+        Args:
+            name: Model name
+            
+        Returns:
+            Compiled Keras model
+        """
+        model = models.Sequential(name=name)
+        
+        # Block 1: 32 filters
+        model.add(layers.Conv2D(32, (3, 3), activation='relu', padding='same', 
+                                input_shape=self.img_shape))
+        model.add(layers.BatchNormalization())
+        model.add(layers.MaxPooling2D((2, 2)))
+        
+        # Block 2: 64 filters
+        model.add(layers.Conv2D(64, (3, 3), activation='relu', padding='same'))
+        model.add(layers.BatchNormalization())
+        model.add(layers.MaxPooling2D((2, 2)))
+        
+        # Block 3: 128 filters
+        model.add(layers.Conv2D(128, (3, 3), activation='relu', padding='same'))
+        model.add(layers.BatchNormalization())
+        model.add(layers.MaxPooling2D((2, 2)))
+        
+        # Block 4: 256 filters
+        model.add(layers.Conv2D(256, (3, 3), activation='relu', padding='same'))
+        model.add(layers.BatchNormalization())
+        model.add(layers.MaxPooling2D((2, 2)))
+        
+        # Dense layers with strong regularization
+        model.add(layers.Flatten())
+        model.add(layers.Dense(256, activation='relu'))
+        model.add(layers.Dropout(0.5))
+        model.add(layers.Dense(128, activation='relu'))
+        model.add(layers.Dropout(0.5))
+        model.add(layers.Dense(self.num_classes, activation='softmax'))
+        
+        return model
+    
+    def create_deep_cnn(self, name='DeepCNN'):
+        """
+        Create a deeper CNN with more layers and BatchNormalization
+        Inspired by inspiration_code2
         
         Args:
             name: Model name
@@ -67,7 +112,7 @@ class WasteModelTrainer:
         model = models.Sequential(name=name)
         
         # Block 1
-        model.add(layers.Conv2D(32, (3, 3), activation='relu', padding='same', 
+        model.add(layers.Conv2D(32, (3, 3), activation='relu', padding='same',
                                 input_shape=self.img_shape))
         model.add(layers.BatchNormalization())
         model.add(layers.Conv2D(32, (3, 3), activation='relu', padding='same'))
@@ -101,17 +146,15 @@ class WasteModelTrainer:
         
         # Dense layers
         model.add(layers.Flatten())
-        model.add(layers.Dense(512, activation='relu', kernel_regularizer=l2(0.001)))
-        model.add(layers.BatchNormalization())
+        model.add(layers.Dense(512, activation='relu'))
         model.add(layers.Dropout(0.5))
-        model.add(layers.Dense(256, activation='relu', kernel_regularizer=l2(0.001)))
-        model.add(layers.BatchNormalization())
+        model.add(layers.Dense(256, activation='relu'))
         model.add(layers.Dropout(0.5))
         model.add(layers.Dense(self.num_classes, activation='softmax'))
         
         return model
     
-    def create_transfer_learning_model(self, base_model_name='ResNet50', trainable_layers=0):
+    def create_transfer_learning_model(self, base_model_name='MobileNetV2', trainable_layers=0):
         """
         Create a transfer learning model using pre-trained architectures
         
@@ -141,23 +184,18 @@ class WasteModelTrainer:
             input_shape=self.img_shape
         )
         
-        # Freeze base model layers
+        # Freeze base model layers initially
         base_model.trainable = False
-        if trainable_layers > 0:
-            # Unfreeze the last N layers
-            for layer in base_model.layers[-trainable_layers:]:
-                layer.trainable = True
         
-        # Create new model
+        # Create new model with improved architecture
         inputs = keras.Input(shape=self.img_shape)
         x = base_model(inputs, training=False)
         x = layers.GlobalAveragePooling2D()(x)
-        x = layers.Dense(512, activation='relu', kernel_regularizer=l2(0.001))(x)
+        x = layers.Dense(256, activation='relu')(x)
         x = layers.BatchNormalization()(x)
         x = layers.Dropout(0.5)(x)
-        x = layers.Dense(256, activation='relu', kernel_regularizer=l2(0.001))(x)
-        x = layers.BatchNormalization()(x)
-        x = layers.Dropout(0.5)(x)
+        x = layers.Dense(128, activation='relu')(x)
+        x = layers.Dropout(0.3)(x)
         outputs = layers.Dense(self.num_classes, activation='softmax')(x)
         
         model = keras.Model(inputs, outputs, name=base_model_name)
@@ -179,9 +217,9 @@ class WasteModelTrainer:
         )
         return model
     
-    def get_callbacks(self, model_name, patience=10):
+    def get_callbacks(self, model_name, patience=5):
         """
-        Create callbacks for training
+        Create callbacks for training with more aggressive early stopping
         
         Args:
             model_name: Name of the model (for file naming)
@@ -200,7 +238,7 @@ class WasteModelTrainer:
             verbose=1
         )
         
-        # Early stopping
+        # Early stopping with shorter patience
         early_stop = callbacks.EarlyStopping(
             monitor='val_loss',
             patience=patience,
@@ -212,7 +250,7 @@ class WasteModelTrainer:
         reduce_lr = callbacks.ReduceLROnPlateau(
             monitor='val_loss',
             factor=0.5,
-            patience=5,
+            patience=3,
             min_lr=1e-7,
             verbose=1
         )
@@ -223,19 +261,18 @@ class WasteModelTrainer:
         
         return [checkpoint, early_stop, reduce_lr, csv_logger]
     
-    def train_model(self, model, model_name, X_train, y_train, X_val, y_val, 
-                   epochs=50, batch_size=32, train_datagen=None):
+    def train_model(self, model, model_name, train_generator, val_data, 
+                   epochs=50, steps_per_epoch=None):
         """
-        Train a single model
+        Train a single model using data generator
         
         Args:
             model: Keras model to train
             model_name: Name of the model
-            X_train, y_train: Training data
-            X_val, y_val: Validation data
+            train_generator: Training data generator with augmentation
+            val_data: Validation data tuple (X_val, y_val)
             epochs: Number of training epochs
-            batch_size: Batch size
-            train_datagen: Data augmentation generator (optional)
+            steps_per_epoch: Steps per epoch (if None, uses generator length)
             
         Returns:
             Training history
@@ -249,31 +286,21 @@ class WasteModelTrainer:
         model.summary()
         
         # Get callbacks
-        callback_list = self.get_callbacks(model_name, patience=10)
+        callback_list = self.get_callbacks(model_name, patience=5)
         
         # Record start time
         start_time = time.time()
         
-        # Train with or without augmentation
-        if train_datagen is not None:
-            print(f"\nTraining with data augmentation...")
-            history = model.fit(
-                train_datagen.flow(X_train, y_train, batch_size=batch_size),
-                validation_data=(X_val, y_val),
-                epochs=epochs,
-                callbacks=callback_list,
-                verbose=1
-            )
-        else:
-            print(f"\nTraining without data augmentation...")
-            history = model.fit(
-                X_train, y_train,
-                validation_data=(X_val, y_val),
-                batch_size=batch_size,
-                epochs=epochs,
-                callbacks=callback_list,
-                verbose=1
-            )
+        # Train with generator
+        print(f"\nTraining with data augmentation...")
+        history = model.fit(
+            train_generator,
+            validation_data=val_data,
+            epochs=epochs,
+            steps_per_epoch=steps_per_epoch,
+            callbacks=callback_list,
+            verbose=1
+        )
         
         # Record end time
         training_time = time.time() - start_time
@@ -365,84 +392,17 @@ class WasteModelTrainer:
         
         print(f"Training history plot saved: {self.plots_path / f'{model_name}_training_history.png'}")
     
-    def train_all_models(self, X_train, y_train, X_val, y_val, 
-                        models_to_train=None, epochs=50, batch_size=32, 
-                        train_datagen=None, learning_rate=0.001):
-        """
-        Train multiple models
-        
-        Args:
-            X_train, y_train: Training data
-            X_val, y_val: Validation data
-            models_to_train: List of model names to train
-            epochs: Number of epochs
-            batch_size: Batch size
-            train_datagen: Data augmentation generator
-            learning_rate: Learning rate
-            
-        Returns:
-            Dictionary of trained models
-        """
-        if models_to_train is None:
-            models_to_train = ['CustomCNN', 'ResNet50', 'VGG16', 'MobileNetV2', 'EfficientNetB0']
-        
-        print("\n" + "="*60)
-        print("WASTE CLASSIFICATION - MODEL TRAINING")
-        print("="*60)
-        print(f"\nModels to train: {models_to_train}")
-        print(f"Training samples: {len(X_train)}")
-        print(f"Validation samples: {len(X_val)}")
-        print(f"Epochs: {epochs}")
-        print(f"Batch size: {batch_size}")
-        print(f"Learning rate: {learning_rate}")
-        
-        trained_models = {}
-        
-        for model_name in models_to_train:
-            try:
-                # Create model
-                if model_name == 'CustomCNN':
-                    model = self.create_custom_cnn(name=model_name)
-                else:
-                    model = self.create_transfer_learning_model(
-                        base_model_name=model_name,
-                        trainable_layers=0
-                    )
-                
-                # Compile model
-                model = self.compile_model(model, learning_rate=learning_rate)
-                
-                # Train model
-                history = self.train_model(
-                    model, model_name,
-                    X_train, y_train, X_val, y_val,
-                    epochs=epochs,
-                    batch_size=batch_size,
-                    train_datagen=train_datagen
-                )
-                
-                trained_models[model_name] = model
-                
-            except Exception as e:
-                print(f"\nError training {model_name}: {str(e)}")
-                continue
-        
-        # Create comparison summary
-        self.create_training_summary()
-        
-        print("\n" + "="*60)
-        print("ALL MODELS TRAINING COMPLETE!")
-        print("="*60)
-        print(f"\nTrained {len(trained_models)} models successfully")
-        print(f"Results saved to: {self.results_path}")
-        
-        return trained_models
-    
     def create_training_summary(self):
-        """Create a summary of all trained models"""
+        """
+        Create a summary comparison of all trained models
+        """
         if not self.training_histories:
-            print("No training histories available")
+            print("No training histories available for summary")
             return
+        
+        print("\n" + "="*60)
+        print("CREATING TRAINING SUMMARY")
+        print("="*60)
         
         # Collect summary data
         summary_data = []
@@ -461,108 +421,291 @@ class WasteModelTrainer:
             })
         
         # Create DataFrame
-        df_summary = pd.DataFrame(summary_data)
-        df_summary = df_summary.sort_values('Best Val Accuracy', ascending=False)
+        summary_df = pd.DataFrame(summary_data)
+        summary_df = summary_df.sort_values('Best Val Accuracy', ascending=False)
         
         # Save to CSV
-        summary_path = self.metrics_path / 'training_summary.csv'
-        df_summary.to_csv(summary_path, index=False)
+        summary_df.to_csv(self.metrics_path / 'training_summary.csv', index=False)
+        print(f"\nTraining summary saved to: {self.metrics_path / 'training_summary.csv'}")
         
-        print(f"\nTraining Summary:")
-        print(df_summary.to_string(index=False))
-        print(f"\nSummary saved to: {summary_path}")
+        # Print summary
+        print("\n" + "="*60)
+        print("TRAINING SUMMARY - ALL MODELS")
+        print("="*60)
+        print(summary_df.to_string(index=False))
         
-        # Plot comparison
-        self.plot_models_comparison(df_summary)
+        # Create comparison plots
+        self.plot_model_comparison(summary_df)
+        
+        return summary_df
     
-    def plot_models_comparison(self, df_summary):
-        """Plot comparison of all models"""
+    def plot_model_comparison(self, summary_df):
+        """
+        Create comparison plots for all models
+        
+        Args:
+            summary_df: DataFrame with model summaries
+        """
         fig, axes = plt.subplots(2, 2, figsize=(16, 12))
         
-        # Best validation accuracy
-        axes[0, 0].barh(df_summary['Model'], df_summary['Best Val Accuracy'], color='steelblue')
-        axes[0, 0].set_xlabel('Accuracy')
-        axes[0, 0].set_title('Best Validation Accuracy Comparison', fontweight='bold')
+        models = summary_df['Model'].values
+        
+        # Best Validation Accuracy
+        axes[0, 0].barh(models, summary_df['Best Val Accuracy'], color='skyblue', edgecolor='navy')
+        axes[0, 0].set_xlabel('Accuracy', fontsize=11)
+        axes[0, 0].set_title('Best Validation Accuracy', fontsize=13, fontweight='bold')
         axes[0, 0].grid(axis='x', alpha=0.3)
         
-        # Training time
-        axes[0, 1].barh(df_summary['Model'], df_summary['Training Time (min)'], color='coral')
-        axes[0, 1].set_xlabel('Time (minutes)')
-        axes[0, 1].set_title('Training Time Comparison', fontweight='bold')
+        # Training Time
+        axes[0, 1].barh(models, summary_df['Training Time (min)'], color='lightcoral', edgecolor='darkred')
+        axes[0, 1].set_xlabel('Time (minutes)', fontsize=11)
+        axes[0, 1].set_title('Training Time', fontsize=13, fontweight='bold')
         axes[0, 1].grid(axis='x', alpha=0.3)
         
-        # Accuracy difference (overfitting indicator)
-        df_summary['Accuracy Gap'] = df_summary['Final Train Accuracy'] - df_summary['Final Val Accuracy']
-        axes[1, 0].barh(df_summary['Model'], df_summary['Accuracy Gap'], color='lightgreen')
-        axes[1, 0].set_xlabel('Accuracy Gap (Train - Val)')
-        axes[1, 0].set_title('Overfitting Indicator (Lower is Better)', fontweight='bold')
+        # Final Val Loss
+        axes[1, 0].barh(models, summary_df['Final Val Loss'], color='lightgreen', edgecolor='darkgreen')
+        axes[1, 0].set_xlabel('Loss', fontsize=11)
+        axes[1, 0].set_title('Final Validation Loss', fontsize=13, fontweight='bold')
         axes[1, 0].grid(axis='x', alpha=0.3)
         
-        # Epochs trained
-        axes[1, 1].barh(df_summary['Model'], df_summary['Epochs Trained'], color='mediumpurple')
-        axes[1, 1].set_xlabel('Epochs')
-        axes[1, 1].set_title('Epochs Trained (Early Stopping)', fontweight='bold')
+        # Epochs Trained
+        axes[1, 1].barh(models, summary_df['Epochs Trained'], color='plum', edgecolor='purple')
+        axes[1, 1].set_xlabel('Epochs', fontsize=11)
+        axes[1, 1].set_title('Epochs Trained', fontsize=13, fontweight='bold')
         axes[1, 1].grid(axis='x', alpha=0.3)
         
         plt.tight_layout()
         plt.savefig(self.plots_path / 'models_comparison.png', dpi=300, bbox_inches='tight')
         plt.close()
         
-        print(f"Models comparison plot saved: {self.plots_path / 'models_comparison.png'}")
+        print(f"Model comparison plot saved: {self.plots_path / 'models_comparison.png'}")
+        
+        # Create accuracy comparison over epochs
+        self.plot_accuracy_comparison()
+    
+    def plot_accuracy_comparison(self):
+        """
+        Plot validation accuracy comparison across all models
+        """
+        plt.figure(figsize=(14, 8))
+        
+        for model_name, data in self.training_histories.items():
+            history = data['history']
+            epochs = range(1, len(history['val_accuracy']) + 1)
+            plt.plot(epochs, history['val_accuracy'], label=model_name, linewidth=2, marker='o', markersize=4)
+        
+        plt.xlabel('Epoch', fontsize=12)
+        plt.ylabel('Validation Accuracy', fontsize=12)
+        plt.title('Validation Accuracy Comparison - All Models', fontsize=14, fontweight='bold')
+        plt.legend(loc='lower right', fontsize=10)
+        plt.grid(True, alpha=0.3)
+        plt.tight_layout()
+        plt.savefig(self.plots_path / 'accuracy_comparison_all_models.png', dpi=300, bbox_inches='tight')
+        plt.close()
+        
+        print(f"Accuracy comparison plot saved: {self.plots_path / 'accuracy_comparison_all_models.png'}")
+    
+    def train_all_models(self, X_train, y_train, X_val, y_val, 
+                        models_to_train=None, epochs=50, batch_size=32, 
+                        train_datagen=None, val_datagen=None, learning_rate=0.001):
+        """
+        Train multiple models using data generators
+        
+        Args:
+            X_train, y_train: Training data (UNNORMALIZED)
+            X_val, y_val: Validation data (UNNORMALIZED)
+            models_to_train: List of model names to train
+            epochs: Number of epochs
+            batch_size: Batch size
+            train_datagen: Training data augmentation generator (with rescale)
+            val_datagen: Validation data generator (with rescale only)
+            learning_rate: Learning rate
+            
+        Returns:
+            Dictionary of trained models
+        """
+        if models_to_train is None:
+            models_to_train = ['CustomCNN', 'DeepCNN', 'MobileNetV2', 'ResNet50', 'VGG16']
+        
+        print("\n" + "="*60)
+        print("WASTE CLASSIFICATION - MODEL TRAINING")
+        print("="*60)
+        print(f"\nModels to train: {models_to_train}")
+        print(f"Training samples: {len(X_train)}")
+        print(f"Validation samples: {len(X_val)}")
+        print(f"Epochs: {epochs}")
+        print(f"Batch size: {batch_size}")
+        print(f"Learning rate: {learning_rate}")
+        
+        # Create generators if not provided
+        if train_datagen is None or val_datagen is None:
+            from tensorflow.keras.preprocessing.image import ImageDataGenerator
+            train_datagen = ImageDataGenerator(
+                rescale=1./255,
+                rotation_range=30,
+                width_shift_range=0.25,
+                height_shift_range=0.25,
+                shear_range=0.25,
+                zoom_range=0.25,
+                horizontal_flip=True,
+                fill_mode='nearest',
+                brightness_range=[0.7, 1.3]
+            )
+            val_datagen = ImageDataGenerator(rescale=1./255)
+        
+        # Create training generator
+        train_generator = train_datagen.flow(
+            X_train, y_train,
+            batch_size=batch_size,
+            shuffle=True
+        )
+        
+        # Normalize validation data
+        X_val_normalized = val_datagen.flow(
+            X_val, y_val,
+            batch_size=len(X_val),
+            shuffle=False
+        ).next()
+        
+        # Calculate steps per epoch
+        steps_per_epoch = len(X_train) // batch_size
+        
+        trained_models = {}
+        
+        for model_name in models_to_train:
+            try:
+                # Create model
+                if model_name == 'CustomCNN':
+                    model = self.create_custom_cnn(name=model_name)
+                elif model_name == 'DeepCNN':
+                    model = self.create_deep_cnn(name=model_name)
+                else:
+                    model = self.create_transfer_learning_model(
+                        base_model_name=model_name,
+                        trainable_layers=0
+                    )
+                
+                # Compile model
+                model = self.compile_model(model, learning_rate=learning_rate)
+                
+                # Train model
+                history = self.train_model(
+                    model, model_name,
+                    train_generator, X_val_normalized,
+                    epochs=epochs,
+                    steps_per_epoch=steps_per_epoch
+                )
+                
+                trained_models[model_name] = model
+                
+            except Exception as e:
+                print(f"\nError training {model_name}: {str(e)}")
+                import traceback
+                traceback.print_exc()
+                continue
+        
+        # Create comparison summary
+        self.create_training_summary()
+        
+        print("\n" + "="*60)
+        print("ALL MODELS TRAINING COMPLETE!")
+        print("="*60)
+        print(f"\nTrained {len(trained_models)} models successfully")
+        print(f"Results saved to: {self.results_path}")
+        
+        return trained_models
 
 
 def main():
     """Main execution function"""
-    # Load preprocessed data
-    print("Loading preprocessed data...")
-    data_path = Path('results/processed_data')
+    print("="*60)
+    print("WASTE CLASSIFICATION - MODEL TRAINING")
+    print("="*60)
     
-    X_train = np.load(data_path / 'X_train.npy')
-    X_val = np.load(data_path / 'X_val.npy')
-    y_train = np.load(data_path / 'y_train.npy')
-    y_val = np.load(data_path / 'y_val.npy')
+    # Check if processed data exists
+    results_path = Path('results')
+    processed_data_path = results_path / 'processed_data'
     
-    print(f"Training data shape: {X_train.shape}")
-    print(f"Validation data shape: {X_val.shape}")
+    if not processed_data_path.exists():
+        print("\n❌ Error: Processed data not found!")
+        print("Please run data_preparation.py first to prepare the data.")
+        return
+    
+    # Load processed data
+    print("\nLoading preprocessed data...")
+    X_train = np.load(processed_data_path / 'X_train.npy')
+    X_val = np.load(processed_data_path / 'X_val.npy')
+    X_test = np.load(processed_data_path / 'X_test.npy')
+    y_train = np.load(processed_data_path / 'y_train.npy')
+    y_val = np.load(processed_data_path / 'y_val.npy')
+    y_test = np.load(processed_data_path / 'y_test.npy')
+    
+    print(f"✓ Training data: {X_train.shape}")
+    print(f"✓ Validation data: {X_val.shape}")
+    print(f"✓ Test data: {X_test.shape}")
     
     # Load data split info
-    with open('results/metrics/data_split_info.json', 'r') as f:
-        split_info = json.load(f)
+    with open(results_path / 'metrics' / 'data_split_info.json', 'r') as f:
+        data_info = json.load(f)
     
-    # Create data augmentation generator
-    from tensorflow.keras.preprocessing.image import ImageDataGenerator
-    train_datagen = ImageDataGenerator(
-        rotation_range=20,
-        width_shift_range=0.2,
-        height_shift_range=0.2,
-        shear_range=0.2,
-        zoom_range=0.2,
-        horizontal_flip=True,
-        fill_mode='nearest',
-        brightness_range=[0.8, 1.2]
-    )
+    class_names = data_info['class_names']
+    num_classes = data_info['num_classes']
+    img_size = tuple(data_info['image_size'])
+    
+    print(f"\nNumber of classes: {num_classes}")
+    print(f"Classes: {class_names}")
     
     # Initialize trainer
     trainer = WasteModelTrainer(
         results_path='results',
-        img_shape=tuple(split_info['image_size']) + (3,),
-        num_classes=split_info['num_classes'],
-        class_names=split_info['class_names']
+        img_shape=(img_size[0], img_size[1], 3),
+        num_classes=num_classes,
+        class_names=class_names
     )
+    
+    # Configure training parameters
+    models_to_train = ['CustomCNN', 'DeepCNN', 'MobileNetV2', 'ResNet50', 'VGG16']
+    epochs = 50
+    batch_size = 32
+    learning_rate = 0.001
+    
+    print("\n" + "="*60)
+    print("TRAINING CONFIGURATION")
+    print("="*60)
+    print(f"Models to train: {models_to_train}")
+    print(f"Epochs: {epochs}")
+    print(f"Batch size: {batch_size}")
+    print(f"Learning rate: {learning_rate}")
+    print(f"Image size: {img_size}")
+    
+    # Ask for confirmation
+    response = input("\nStart training? (yes/no): ").strip().lower()
+    if response not in ['yes', 'y']:
+        print("Training cancelled.")
+        return
     
     # Train all models
-    models_to_train = ['CustomCNN', 'ResNet50', 'VGG16', 'MobileNetV2', 'EfficientNetB0']
-    
     trained_models = trainer.train_all_models(
-        X_train, y_train, X_val, y_val,
+        X_train, y_train,
+        X_val, y_val,
         models_to_train=models_to_train,
-        epochs=50,
-        batch_size=32,
-        train_datagen=train_datagen,
-        learning_rate=0.001
+        epochs=epochs,
+        batch_size=batch_size,
+        learning_rate=learning_rate
     )
     
-    print(f"\nTraining complete! {len(trained_models)} models trained successfully.")
+    print("\n" + "="*60)
+    print("TRAINING COMPLETE!")
+    print("="*60)
+    print(f"\nSuccessfully trained {len(trained_models)} models:")
+    for model_name in trained_models.keys():
+        print(f"  ✓ {model_name}")
+    
+    print(f"\nAll results saved to: {results_path}")
+    print("\nNext steps:")
+    print("  1. Run evaluate.py to evaluate models on test data")
+    print("  2. Run ensemble.py to create ensemble models")
+    print("  3. Run predict.py to make predictions on new images")
 
 
 if __name__ == "__main__":

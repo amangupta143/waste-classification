@@ -101,11 +101,12 @@ class WasteDataPreparation:
     def plot_class_distribution(self, class_counts):
         """Plot and save class distribution"""
         plt.figure(figsize=(12, 6))
-        plt.bar(range(len(class_counts)), class_counts.values)
-        plt.xlabel('Waste Category')
-        plt.ylabel('Number of Images')
-        plt.title('Class Distribution in Dataset')
+        plt.bar(range(len(class_counts)), class_counts.values, color='skyblue', edgecolor='white', linewidth=1.5)
+        plt.xlabel('Waste Category', fontsize=12)
+        plt.ylabel('Number of Images', fontsize=12)
+        plt.title('Class Distribution in Dataset', fontsize=14, fontweight='bold')
         plt.xticks(range(len(class_counts)), class_counts.index, rotation=45, ha='right')
+        plt.grid(axis='y', alpha=0.3)
         plt.tight_layout()
         plt.savefig(self.results_path / 'plots' / 'class_distribution.png', dpi=300, bbox_inches='tight')
         plt.close()
@@ -113,13 +114,13 @@ class WasteDataPreparation:
     
     def load_images(self, df):
         """
-        Load and preprocess all images
+        Load and preprocess all images (WITHOUT normalization for generator compatibility)
         
         Args:
             df: DataFrame with image information
             
         Returns:
-            X: Image array (num_samples, height, width, channels)
+            X: Image array (num_samples, height, width, channels) - UNNORMALIZED [0-255]
             y: Label array (num_samples,)
         """
         print("\nLoading and preprocessing images...")
@@ -132,8 +133,8 @@ class WasteDataPreparation:
                 img = load_img(row['image_path'], target_size=self.img_size)
                 img_array = img_to_array(img)
                 
-                # Normalize pixel values to [0, 1]
-                img_array = img_array / 255.0
+                # DO NOT normalize here - let ImageDataGenerator handle it
+                # This is crucial for proper augmentation
                 
                 X.append(img_array)
                 y.append(row['class_idx'])
@@ -145,6 +146,7 @@ class WasteDataPreparation:
         y = np.array(y, dtype=np.int32)
         
         print(f"Loaded {len(X)} images with shape: {X.shape}")
+        print(f"Pixel value range: [{X.min():.1f}, {X.max():.1f}]")
         
         return X, y
     
@@ -171,9 +173,9 @@ class WasteDataPreparation:
             X_temp, y_temp, test_size=self.val_size, random_state=self.random_state, stratify=y_temp
         )
         
-        print(f"Training set: {len(X_train)} images")
-        print(f"Validation set: {len(X_val)} images")
-        print(f"Test set: {len(X_test)} images")
+        print(f"Training set: {len(X_train)} images ({len(X_train)/len(X)*100:.1f}%)")
+        print(f"Validation set: {len(X_val)} images ({len(X_val)/len(X)*100:.1f}%)")
+        print(f"Test set: {len(X_test)} images ({len(X_test)/len(X)*100:.1f}%)")
         
         # Convert labels to categorical
         y_train_cat = to_categorical(y_train, num_classes=self.num_classes)
@@ -202,25 +204,27 @@ class WasteDataPreparation:
         Create ImageDataGenerator for data augmentation and preprocessing
         
         Returns:
-            train_generator, val_generator (no augmentation for validation)
+            train_generator, val_generator
         """
-        # Training data generator with augmentation
+        # Training data generator with STRONG augmentation (inspired by best practices)
         train_datagen = ImageDataGenerator(
-            rotation_range=20,
-            width_shift_range=0.2,
-            height_shift_range=0.2,
-            shear_range=0.2,
-            zoom_range=0.2,
+            rescale=1./255,  # Normalize to [0,1]
+            rotation_range=30,  # Increased rotation
+            width_shift_range=0.25,  # Increased shift
+            height_shift_range=0.25,
+            shear_range=0.25,  # Increased shear
+            zoom_range=0.25,  # Increased zoom
             horizontal_flip=True,
+            vertical_flip=False,  # Not suitable for waste classification
             fill_mode='nearest',
-            brightness_range=[0.8, 1.2]
+            brightness_range=[0.7, 1.3]  # Wider brightness range
         )
         
-        # Validation/Test data generator (no augmentation, only rescaling)
-        val_datagen = ImageDataGenerator()
+        # Validation/Test data generator (only rescaling)
+        val_datagen = ImageDataGenerator(rescale=1./255)
         
         print("\nData augmentation generators created")
-        print("Training augmentation: rotation, shift, shear, zoom, flip, brightness")
+        print("Training augmentation: rotation(30°), shift(0.25), shear(0.25), zoom(0.25), flip, brightness(0.7-1.3)")
         
         return train_datagen, val_datagen
     
@@ -229,7 +233,7 @@ class WasteDataPreparation:
         Visualize random samples from the dataset
         
         Args:
-            X: Image array
+            X: Image array (UNNORMALIZED)
             y: Label array
             num_samples: Number of samples to visualize
         """
@@ -248,9 +252,11 @@ class WasteDataPreparation:
         for idx, ax in enumerate(axes):
             if idx < len(indices):
                 img_idx = indices[idx]
-                ax.imshow(X[img_idx])
+                # Normalize for display
+                img_display = X[img_idx] / 255.0
+                ax.imshow(img_display)
                 label_idx = np.argmax(y[img_idx]) if len(y[img_idx].shape) > 0 else y[img_idx]
-                ax.set_title(self.class_names[label_idx], fontsize=10)
+                ax.set_title(self.class_names[label_idx], fontsize=10, fontweight='bold')
                 ax.axis('off')
             else:
                 ax.axis('off')
@@ -265,21 +271,23 @@ class WasteDataPreparation:
         Visualize augmented versions of a sample image
         
         Args:
-            X: Image array (normalized 0-1)
+            X: Image array (UNNORMALIZED)
             y: Label array
             num_augmentations: Number of augmented versions to show
         """
         print("\nCreating augmentation visualization...")
         
-        # Create augmentation generator (without brightness for visualization)
+        # Create augmentation generator with rescaling
         aug_datagen = ImageDataGenerator(
-            rotation_range=20,
-            width_shift_range=0.2,
-            height_shift_range=0.2,
-            shear_range=0.2,
-            zoom_range=0.2,
+            rescale=1./255,
+            rotation_range=30,
+            width_shift_range=0.25,
+            height_shift_range=0.25,
+            shear_range=0.25,
+            zoom_range=0.25,
             horizontal_flip=True,
-            fill_mode='nearest'
+            fill_mode='nearest',
+            brightness_range=[0.7, 1.3]
         )
         
         # Select random image
@@ -290,19 +298,19 @@ class WasteDataPreparation:
         # Create augmented versions
         fig, axes = plt.subplots(1, num_augmentations + 1, figsize=(20, 4))
         
-        # Original image
-        axes[0].imshow(X[idx])
-        axes[0].set_title(f'Original\n{self.class_names[label_idx]}')
+        # Original image (normalized for display)
+        axes[0].imshow(X[idx] / 255.0)
+        axes[0].set_title(f'Original\n{self.class_names[label_idx]}', fontsize=11, fontweight='bold')
         axes[0].axis('off')
         
         # Augmented images
         aug_iter = aug_datagen.flow(img, batch_size=1, seed=self.random_state)
         for i in range(num_augmentations):
             aug_img = next(aug_iter)[0]
-            # Clip to ensure valid range
+            # Already normalized by generator
             aug_img = np.clip(aug_img, 0, 1)
             axes[i+1].imshow(aug_img)
-            axes[i+1].set_title(f'Augmented {i+1}')
+            axes[i+1].set_title(f'Augmented {i+1}', fontsize=11, fontweight='bold')
             axes[i+1].axis('off')
         
         plt.tight_layout()
@@ -409,6 +417,7 @@ def main():
     print(f"  Number of classes: {data['num_classes']}")
     print(f"  Image shape: {data['X_train'][0].shape}")
     print(f"\nAll results saved to: results/")
+    print(f"\nNext step: Run train_models.py to train the models")
 
 
 if __name__ == "__main__":
