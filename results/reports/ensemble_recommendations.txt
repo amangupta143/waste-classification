@@ -1,0 +1,96 @@
+================================================================================
+WASTE CLASSIFICATION - ENSEMBLE MODEL RECOMMENDATIONS
+================================================================================
+
+EXECUTIVE SUMMARY
+--------------------------------------------------------------------------------
+Total Models Evaluated: 19
+Ensemble Methods Tested: 5
+Processing Time: 2.10 minutes
+
+BEST ENSEMBLE MODEL
+--------------------------------------------------------------------------------
+Method: Stacking (Logistic)
+Accuracy: 0.8696 (86.96%)
+F1-Score: 0.8698
+
+BEST INDIVIDUAL MODEL
+--------------------------------------------------------------------------------
+Model: MobileNetV2_Transfer_finetuned
+Accuracy: 0.8623 (86.23%)
+F1-Score: 0.8636
+
+PERFORMANCE IMPROVEMENT
+--------------------------------------------------------------------------------
+Ensemble vs Individual: +0.74%
+
+DETAILED RANKINGS
+--------------------------------------------------------------------------------
+
+Ensemble Methods (by accuracy):
+  4. Stacking (Logistic): 0.8696
+  5. Stacking (Random Forest): 0.8665
+  3. Weighted Voting: 0.8517
+  2. Soft Voting: 0.8433
+  1. Hard Voting: 0.7613
+
+Individual Models (top 5 by accuracy):
+  10. MobileNetV2_Transfer_finetuned: 0.8623
+  16. VGG16_Transfer_finetuned: 0.8381
+  11. MobileNetV2: 0.7518
+  9. MobileNetV2_Transfer: 0.7445
+  15. VGG16_Transfer: 0.7424
+
+================================================================================
+DEPLOYMENT RECOMMENDATIONS
+================================================================================
+
+RECOMMENDATION: Consider Ensemble or Best Individual
+
+The ensemble provides a 0.74% improvement, which is modest.
+Choose based on your priorities:
+
+  - If accuracy is critical: Use ensemble
+  - If speed is important: Use best individual model
+
+Deployment Options:
+  1. High Accuracy: Stacking (Logistic)
+  2. High Speed: MobileNetV2_Transfer_finetuned
+
+================================================================================
+TECHNICAL NOTES
+================================================================================
+
+Models Used in Ensemble:
+  Keras Models:
+    - CustomCNN
+    - CustomCNN_v1
+    - DeepCNN
+    - DeepCNN_v2
+    - DeepCNN_v3_Fixed
+    - DeepCNN_v3
+    - EfficientNetB0_Transfer
+    - EfficientNetB0_Transfer_finetuned
+    - MobileNetV2_Transfer
+    - MobileNetV2_Transfer_finetuned
+    - MobileNetV2
+    - ResNet50_Transfer
+    - ResNet50_Transfer_finetuned
+    - ResNet50
+    - VGG16_Transfer
+    - VGG16_Transfer_finetuned
+    - VGG16
+  YOLO Models:
+    - YOLOv8n
+    - YOLOv8s
+
+Ensemble Methods Evaluated:
+  1. Hard Voting: Majority class prediction
+  2. Soft Voting: Average probability prediction
+  3. Weighted Voting: Performance-weighted probabilities
+  4. Stacking (Logistic): Meta-learner with logistic regression
+  5. Stacking (Random Forest): Meta-learner with random forest
+
+================================================================================
+END OF REPORT
+================================================================================

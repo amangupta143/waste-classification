@@ -1,0 +1,16 @@
+True Class,Predicted Class,Count,Percentage of True Class
+Metal,Plastic,124,78.48101265822784
+Plastic,Vegetation,70,37.83783783783784
+Food Organics,Vegetation,68,82.92682926829268
+Glass,Plastic,62,73.80952380952381
+Cardboard,Plastic,60,65.21739130434783
+Miscellaneous Trash,Plastic,59,59.59595959595959
+Paper,Plastic,55,55.00000000000001
+Paper,Vegetation,45,45.0
+Miscellaneous Trash,Vegetation,40,40.4040404040404
+Textile Trash,Plastic,39,60.9375
+Metal,Vegetation,34,21.518987341772153
+Cardboard,Vegetation,32,34.78260869565217
+Textile Trash,Vegetation,25,39.0625
+Glass,Vegetation,22,26.190476190476193
+Food Organics,Plastic,14,17.073170731707318

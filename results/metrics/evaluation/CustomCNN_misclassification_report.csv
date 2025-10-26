@@ -1,0 +1,9 @@
+True Class,Predicted Class,Count,Percentage of True Class
+Metal,Plastic,158,100.0
+Paper,Plastic,100,100.0
+Miscellaneous Trash,Plastic,99,100.0
+Cardboard,Plastic,92,100.0
+Vegetation,Plastic,87,100.0
+Glass,Plastic,84,100.0
+Food Organics,Plastic,82,100.0
+Textile Trash,Plastic,64,100.0

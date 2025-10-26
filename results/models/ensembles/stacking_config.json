@@ -1,0 +1,24 @@
+{
+    "model_names": [
+        "CustomCNN",
+        "CustomCNN_v1",
+        "DeepCNN",
+        "DeepCNN_v2",
+        "DeepCNN_v3_Fixed",
+        "DeepCNN_v3",
+        "EfficientNetB0_Transfer",
+        "EfficientNetB0_Transfer_finetuned",
+        "MobileNetV2_Transfer",
+        "MobileNetV2_Transfer_finetuned",
+        "MobileNetV2",
+        "ResNet50_Transfer",
+        "ResNet50_Transfer_finetuned",
+        "ResNet50",
+        "VGG16_Transfer",
+        "VGG16_Transfer_finetuned",
+        "VGG16",
+        "YOLOv8n",
+        "YOLOv8s"
+    ],
+    "meta_model_type": "LogisticRegression"
+}

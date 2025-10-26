@@ -1,0 +1,235 @@
+================================================================================
+WASTE CLASSIFICATION - EVALUATION SUMMARY
+================================================================================
+
+MODELS EVALUATED
+--------------------------------------------------------------------------------
+  • CustomCNN
+  • CustomCNN_v1
+  • DeepCNN
+  • DeepCNN_v2
+  • DeepCNN_v3_Fixed
+  • DeepCNN_v3
+  • EfficientNetB0_Transfer
+  • EfficientNetB0_Transfer_finetuned
+  • MobileNetV2_Transfer
+  • MobileNetV2_Transfer_finetuned
+  • MobileNetV2
+  • ResNet50_Transfer
+  • ResNet50_Transfer_finetuned
+  • ResNet50
+  • VGG16_Transfer
+  • VGG16_Transfer_finetuned
+  • VGG16
+  • YOLOv8n
+  • YOLOv8s
+
+Total Models: 19
+
+================================================================================
+BEST PERFORMING MODELS
+================================================================================
+
+🏆 Best Accuracy: MobileNetV2_Transfer_finetuned
+   Accuracy: 0.8623 (86.23%)
+
+🏆 Best F1-Score: MobileNetV2_Transfer_finetuned
+   F1-Score: 0.8636
+
+================================================================================
+DETAILED PERFORMANCE BREAKDOWN
+================================================================================
+
+MobileNetV2_Transfer_finetuned:
+  Accuracy: 0.8623
+  Precision: 0.8739
+  Recall: 0.8581
+  F1-Score: 0.8636
+
+VGG16_Transfer_finetuned:
+  Accuracy: 0.8381
+  Precision: 0.8436
+  Recall: 0.8342
+  F1-Score: 0.8343
+
+MobileNetV2:
+  Accuracy: 0.7518
+  Precision: 0.7523
+  Recall: 0.7536
+  F1-Score: 0.7458
+
+MobileNetV2_Transfer:
+  Accuracy: 0.7445
+  Precision: 0.7553
+  Recall: 0.7476
+  F1-Score: 0.7478
+
+VGG16_Transfer:
+  Accuracy: 0.7424
+  Precision: 0.7486
+  Recall: 0.7382
+  F1-Score: 0.7386
+
+VGG16:
+  Accuracy: 0.7182
+  Precision: 0.7363
+  Recall: 0.7030
+  F1-Score: 0.7134
+
+DeepCNN_v2:
+  Accuracy: 0.6614
+  Precision: 0.6873
+  Recall: 0.6406
+  F1-Score: 0.6528
+
+YOLOv8n:
+  Accuracy: 0.5868
+  Precision: 0.6584
+  Recall: 0.5596
+  F1-Score: 0.5676
+
+YOLOv8s:
+  Accuracy: 0.5741
+  Precision: 0.6445
+  Recall: 0.5322
+  F1-Score: 0.5268
+
+DeepCNN_v3_Fixed:
+  Accuracy: 0.5563
+  Precision: 0.5778
+  Recall: 0.5479
+  F1-Score: 0.5355
+
+ResNet50_Transfer_finetuned:
+  Accuracy: 0.5142
+  Precision: 0.5059
+  Recall: 0.4701
+  F1-Score: 0.4552
+
+EfficientNetB0_Transfer_finetuned:
+  Accuracy: 0.4406
+  Precision: 0.4550
+  Recall: 0.4079
+  F1-Score: 0.3849
+
+ResNet50_Transfer:
+  Accuracy: 0.4196
+  Precision: 0.4371
+  Recall: 0.4081
+  F1-Score: 0.3929
+
+ResNet50:
+  Accuracy: 0.4038
+  Precision: 0.3787
+  Recall: 0.3629
+  F1-Score: 0.3373
+
+EfficientNetB0_Transfer:
+  Accuracy: 0.2124
+  Precision: 0.0471
+  Recall: 0.1802
+  F1-Score: 0.0738
+
+CustomCNN:
+  Accuracy: 0.1945
+  Precision: 0.0216
+  Recall: 0.1111
+  F1-Score: 0.0362
+
+DeepCNN:
+  Accuracy: 0.1945
+  Precision: 0.0695
+  Recall: 0.1128
+  F1-Score: 0.0467
+
+DeepCNN_v3:
+  Accuracy: 0.1945
+  Precision: 0.0216
+  Recall: 0.1111
+  F1-Score: 0.0362
+
+CustomCNN_v1:
+  Accuracy: 0.1935
+  Precision: 0.0215
+  Recall: 0.1105
+  F1-Score: 0.0360
+
+================================================================================
+PER-CLASS ANALYSIS ACROSS ALL MODELS
+================================================================================
+
+Cardboard:
+  Average F1-Score: 0.4746
+  Best F1-Score: 0.8939
+  Worst F1-Score: 0.0000
+  Std Dev: 0.3188
+
+Food Organics:
+  Average F1-Score: 0.4460
+  Best F1-Score: 0.8758
+  Worst F1-Score: 0.0000
+  Std Dev: 0.3259
+
+Glass:
+  Average F1-Score: 0.4421
+  Best F1-Score: 0.8427
+  Worst F1-Score: 0.0000
+  Std Dev: 0.3209
+
+Metal:
+  Average F1-Score: 0.5170
+  Best F1-Score: 0.8810
+  Worst F1-Score: 0.0000
+  Std Dev: 0.3233
+
+Miscellaneous Trash:
+  Average F1-Score: 0.2913
+  Best F1-Score: 0.7416
+  Worst F1-Score: 0.0000
+  Std Dev: 0.2389
+
+Paper:
+  Average F1-Score: 0.4448
+  Best F1-Score: 0.8962
+  Worst F1-Score: 0.0000
+  Std Dev: 0.3292
+
+Plastic:
+  Average F1-Score: 0.5734
+  Best F1-Score: 0.8375
+  Worst F1-Score: 0.3226
+  Std Dev: 0.1770
+
+Textile Trash:
+  Average F1-Score: 0.3855
+  Best F1-Score: 0.8871
+  Worst F1-Score: 0.0000
+  Std Dev: 0.3077
+
+Vegetation:
+  Average F1-Score: 0.5584
+  Best F1-Score: 0.9492
+  Worst F1-Score: 0.0000
+  Std Dev: 0.3350
+
+================================================================================
+RECOMMENDATIONS
+================================================================================
+
+For Deployment:
+  Primary Model: MobileNetV2_Transfer_finetuned
+  Reason: Highest accuracy (0.8623)
+
+Most Challenging Classes (need improvement):
+  • Miscellaneous Trash (Avg F1: 0.2913)
+  • Textile Trash (Avg F1: 0.3855)
+  • Glass (Avg F1: 0.4421)
+
+Best Performing Classes:
+  • Metal (Avg F1: 0.5170)
+  • Vegetation (Avg F1: 0.5584)
+  • Plastic (Avg F1: 0.5734)
+
+================================================================================
+END OF EVALUATION SUMMARY
+================================================================================

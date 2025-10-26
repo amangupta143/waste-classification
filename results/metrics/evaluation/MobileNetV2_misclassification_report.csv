@@ -1,0 +1,49 @@
+True Class,Predicted Class,Count,Percentage of True Class
+Plastic,Glass,28,15.135135135135137
+Miscellaneous Trash,Textile Trash,17,17.17171717171717
+Plastic,Metal,14,7.567567567567568
+Cardboard,Paper,13,14.130434782608695
+Food Organics,Vegetation,9,10.975609756097562
+Miscellaneous Trash,Paper,9,9.090909090909092
+Metal,Plastic,9,5.69620253164557
+Glass,Plastic,9,10.714285714285714
+Textile Trash,Paper,8,12.5
+Glass,Metal,8,9.523809523809524
+Miscellaneous Trash,Plastic,8,8.080808080808081
+Miscellaneous Trash,Metal,7,7.07070707070707
+Paper,Metal,7,7.000000000000001
+Paper,Cardboard,7,7.000000000000001
+Plastic,Paper,6,3.2432432432432434
+Food Organics,Miscellaneous Trash,6,7.317073170731707
+Miscellaneous Trash,Glass,5,5.05050505050505
+Plastic,Cardboard,5,2.7027027027027026
+Miscellaneous Trash,Food Organics,4,4.040404040404041
+Vegetation,Miscellaneous Trash,4,4.597701149425287
+Metal,Glass,4,2.5316455696202533
+Miscellaneous Trash,Vegetation,3,3.0303030303030303
+Textile Trash,Miscellaneous Trash,3,4.6875
+Miscellaneous Trash,Cardboard,3,3.0303030303030303
+Metal,Paper,3,1.89873417721519
+Cardboard,Miscellaneous Trash,3,3.260869565217391
+Food Organics,Plastic,3,3.6585365853658534
+Plastic,Textile Trash,3,1.6216216216216217
+Textile Trash,Plastic,3,4.6875
+Paper,Plastic,3,3.0
+Food Organics,Glass,2,2.4390243902439024
+Cardboard,Plastic,2,2.1739130434782608
+Plastic,Miscellaneous Trash,2,1.0810810810810811
+Metal,Cardboard,2,1.2658227848101267
+Textile Trash,Metal,1,1.5625
+Textile Trash,Cardboard,1,1.5625
+Vegetation,Food Organics,1,1.1494252873563218
+Metal,Textile Trash,1,0.6329113924050633
+Food Organics,Textile Trash,1,1.2195121951219512
+Food Organics,Metal,1,1.2195121951219512
+Plastic,Food Organics,1,0.5405405405405406
+Metal,Vegetation,1,0.6329113924050633
+Paper,Textile Trash,1,1.0
+Glass,Paper,1,1.1904761904761905
+Glass,Textile Trash,1,1.1904761904761905
+Glass,Vegetation,1,1.1904761904761905
+Metal,Miscellaneous Trash,1,0.6329113924050633
+Cardboard,Metal,1,1.0869565217391304

@@ -1,0 +1,39 @@
+{
+    "total_models_used": 19,
+    "keras_models": [
+        "CustomCNN",
+        "CustomCNN_v1",
+        "DeepCNN",
+        "DeepCNN_v2",
+        "DeepCNN_v3_Fixed",
+        "DeepCNN_v3",
+        "EfficientNetB0_Transfer",
+        "EfficientNetB0_Transfer_finetuned",
+        "MobileNetV2_Transfer",
+        "MobileNetV2_Transfer_finetuned",
+        "MobileNetV2",
+        "ResNet50_Transfer",
+        "ResNet50_Transfer_finetuned",
+        "ResNet50",
+        "VGG16_Transfer",
+        "VGG16_Transfer_finetuned",
+        "VGG16"
+    ],
+    "yolo_models": [
+        "YOLOv8n",
+        "YOLOv8s"
+    ],
+    "ensemble_methods_evaluated": 5,
+    "best_ensemble": {
+        "name": "Stacking (Logistic)",
+        "accuracy": 0.8696109358569927,
+        "f1_score": 0.86982759473681
+    },
+    "best_individual": {
+        "name": "MobileNetV2_Transfer_finetuned",
+        "accuracy": 0.8622502628811777,
+        "f1_score": 0.8636033818056409
+    },
+    "improvement_percentage": 0.7360672975814997,
+    "total_time_seconds": 125.78228688240051
+}

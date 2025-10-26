@@ -1,0 +1,50 @@
+True Class,Predicted Class,Count,Percentage of True Class
+Plastic,Metal,20,10.81081081081081
+Metal,Plastic,18,11.39240506329114
+Miscellaneous Trash,Plastic,15,15.151515151515152
+Cardboard,Paper,13,14.130434782608695
+Plastic,Glass,13,7.027027027027027
+Miscellaneous Trash,Metal,11,11.11111111111111
+Miscellaneous Trash,Textile Trash,10,10.1010101010101
+Glass,Plastic,9,10.714285714285714
+Paper,Metal,9,9.0
+Miscellaneous Trash,Food Organics,8,8.080808080808081
+Paper,Cardboard,8,8.0
+Textile Trash,Paper,8,12.5
+Glass,Metal,7,8.333333333333332
+Textile Trash,Metal,7,10.9375
+Miscellaneous Trash,Vegetation,5,5.05050505050505
+Cardboard,Miscellaneous Trash,5,5.434782608695652
+Food Organics,Vegetation,5,6.097560975609756
+Textile Trash,Miscellaneous Trash,4,6.25
+Miscellaneous Trash,Paper,4,4.040404040404041
+Paper,Plastic,4,4.0
+Food Organics,Plastic,4,4.878048780487805
+Cardboard,Plastic,4,4.3478260869565215
+Paper,Textile Trash,3,3.0
+Plastic,Miscellaneous Trash,3,1.6216216216216217
+Plastic,Cardboard,3,1.6216216216216217
+Plastic,Textile Trash,3,1.6216216216216217
+Miscellaneous Trash,Glass,3,3.0303030303030303
+Metal,Miscellaneous Trash,3,1.89873417721519
+Metal,Glass,3,1.89873417721519
+Glass,Vegetation,3,3.571428571428571
+Food Organics,Miscellaneous Trash,3,3.6585365853658534
+Cardboard,Vegetation,3,3.260869565217391
+Cardboard,Metal,2,2.1739130434782608
+Textile Trash,Vegetation,2,3.125
+Paper,Miscellaneous Trash,2,2.0
+Metal,Cardboard,2,1.2658227848101267
+Vegetation,Miscellaneous Trash,2,2.2988505747126435
+Plastic,Paper,2,1.0810810810810811
+Miscellaneous Trash,Cardboard,2,2.0202020202020203
+Plastic,Vegetation,1,0.5405405405405406
+Vegetation,Food Organics,1,1.1494252873563218
+Cardboard,Food Organics,1,1.0869565217391304
+Paper,Vegetation,1,1.0
+Paper,Glass,1,1.0
+Metal,Vegetation,1,0.6329113924050633
+Metal,Textile Trash,1,0.6329113924050633
+Metal,Paper,1,0.6329113924050633
+Food Organics,Metal,1,1.2195121951219512
+Vegetation,Textile Trash,1,1.1494252873563218

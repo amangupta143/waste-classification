@@ -1,0 +1,15 @@
+{
+    "model_name": "YOLOv8s",
+    "model_size": "s",
+    "training_time_seconds": 3142.926108598709,
+    "training_time_minutes": 52.38210180997849,
+    "epochs_trained": 100,
+    "top1_accuracy": 0.8543689250946045,
+    "top5_accuracy": 1.0,
+    "imgsz": 640,
+    "batch_size": 8,
+    "optimizer": "AdamW",
+    "lr0": 0.001,
+    "lrf": 0.0001,
+    "best_model_path": "results/models/YOLOv8s_best.pt"
+}

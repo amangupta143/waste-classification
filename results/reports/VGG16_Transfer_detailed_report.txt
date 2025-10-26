@@ -1,0 +1,149 @@
+================================================================================
+DETAILED EVALUATION REPORT: VGG16_Transfer
+================================================================================
+
+OVERALL PERFORMANCE METRICS
+--------------------------------------------------------------------------------
+Accuracy: 0.7424 (74.24%)
+Precision (Macro): 0.7486
+Precision (Weighted): 0.7407
+Recall (Macro): 0.7382
+Recall (Weighted): 0.7424
+F1-Score (Macro): 0.7386
+F1-Score (Weighted): 0.7368
+
+PER-CLASS PERFORMANCE
+--------------------------------------------------------------------------------
+
+Cardboard:
+  Precision: 0.8101
+  Recall: 0.6957
+  F1-Score: 0.7485
+  Total Samples: 92
+  Correct Predictions: 64 (69.6%)
+
+Food Organics:
+  Precision: 0.8734
+  Recall: 0.8415
+  F1-Score: 0.8571
+  Total Samples: 82
+  Correct Predictions: 69 (84.1%)
+
+Glass:
+  Precision: 0.7647
+  Recall: 0.7738
+  F1-Score: 0.7692
+  Total Samples: 84
+  Correct Predictions: 65 (77.4%)
+
+Metal:
+  Precision: 0.6935
+  Recall: 0.8165
+  F1-Score: 0.7500
+  Total Samples: 158
+  Correct Predictions: 129 (81.6%)
+
+Miscellaneous Trash:
+  Precision: 0.6508
+  Recall: 0.4141
+  F1-Score: 0.5062
+  Total Samples: 99
+  Correct Predictions: 41 (41.4%)
+
+Paper:
+  Precision: 0.7200
+  Recall: 0.7200
+  F1-Score: 0.7200
+  Total Samples: 100
+  Correct Predictions: 72 (72.0%)
+
+Plastic:
+  Precision: 0.7216
+  Recall: 0.7568
+  F1-Score: 0.7388
+  Total Samples: 185
+  Correct Predictions: 140 (75.7%)
+
+Textile Trash:
+  Precision: 0.7049
+  Recall: 0.6719
+  F1-Score: 0.6880
+  Total Samples: 64
+  Correct Predictions: 43 (67.2%)
+
+Vegetation:
+  Precision: 0.7981
+  Recall: 0.9540
+  F1-Score: 0.8691
+  Total Samples: 87
+  Correct Predictions: 83 (95.4%)
+
+--------------------------------------------------------------------------------
+
+🏆 Best Performing Class: Vegetation
+   F1-Score: 0.8691
+
+⚠️  Worst Performing Class: Miscellaneous Trash
+   F1-Score: 0.5062
+
+================================================================================
+CONFIDENCE ANALYSIS
+================================================================================
+Correct Predictions:
+  Mean Confidence: 0.8033
+  Median Confidence: 0.8906
+
+Incorrect Predictions:
+  Mean Confidence: 0.5484
+  Median Confidence: 0.5294
+
+Confidence Gap: 0.2549
+✅ Model shows good confidence calibration
+
+================================================================================
+TOP MISCLASSIFICATION PATTERNS
+================================================================================
+
+Plastic → Metal
+  Count: 20
+  Percentage: 10.8%
+
+Metal → Plastic
+  Count: 18
+  Percentage: 11.4%
+
+Miscellaneous Trash → Plastic
+  Count: 15
+  Percentage: 15.2%
+
+Cardboard → Paper
+  Count: 13
+  Percentage: 14.1%
+
+Plastic → Glass
+  Count: 13
+  Percentage: 7.0%
+
+Miscellaneous Trash → Metal
+  Count: 11
+  Percentage: 11.1%
+
+Miscellaneous Trash → Textile Trash
+  Count: 10
+  Percentage: 10.1%
+
+Glass → Plastic
+  Count: 9
+  Percentage: 10.7%
+
+Paper → Metal
+  Count: 9
+  Percentage: 9.0%
+
+Miscellaneous Trash → Food Organics
+  Count: 8
+  Percentage: 8.1%
+
+================================================================================
+END OF REPORT
+================================================================================

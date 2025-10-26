@@ -1,0 +1,55 @@
+True Class,Predicted Class,Count,Percentage of True Class
+Miscellaneous Trash,Textile Trash,32,32.323232323232325
+Metal,Paper,31,19.62025316455696
+Vegetation,Food Organics,29,33.33333333333333
+Miscellaneous Trash,Plastic,26,26.262626262626267
+Metal,Plastic,21,13.291139240506327
+Glass,Paper,15,17.857142857142858
+Paper,Plastic,15,15.0
+Plastic,Glass,15,8.108108108108109
+Metal,Textile Trash,15,9.49367088607595
+Food Organics,Plastic,14,17.073170731707318
+Glass,Plastic,14,16.666666666666664
+Paper,Cardboard,14,14.000000000000002
+Plastic,Paper,13,7.027027027027027
+Cardboard,Plastic,12,13.043478260869565
+Miscellaneous Trash,Paper,10,10.1010101010101
+Textile Trash,Paper,9,14.0625
+Textile Trash,Plastic,9,14.0625
+Plastic,Textile Trash,8,4.324324324324325
+Paper,Textile Trash,8,8.0
+Miscellaneous Trash,Metal,7,7.07070707070707
+Plastic,Metal,6,3.2432432432432434
+Vegetation,Plastic,6,6.896551724137931
+Cardboard,Food Organics,6,6.521739130434782
+Miscellaneous Trash,Food Organics,6,6.0606060606060606
+Metal,Glass,6,3.79746835443038
+Metal,Miscellaneous Trash,5,3.1645569620253164
+Vegetation,Miscellaneous Trash,5,5.747126436781609
+Glass,Cardboard,5,5.952380952380952
+Miscellaneous Trash,Glass,4,4.040404040404041
+Cardboard,Glass,4,4.3478260869565215
+Paper,Glass,4,4.0
+Metal,Cardboard,4,2.5316455696202533
+Cardboard,Paper,4,4.3478260869565215
+Textile Trash,Food Organics,4,6.25
+Glass,Metal,4,4.761904761904762
+Cardboard,Metal,3,3.260869565217391
+Vegetation,Glass,3,3.4482758620689653
+Textile Trash,Metal,3,4.6875
+Plastic,Miscellaneous Trash,3,1.6216216216216217
+Food Organics,Miscellaneous Trash,2,2.4390243902439024
+Plastic,Food Organics,2,1.0810810810810811
+Plastic,Cardboard,2,1.0810810810810811
+Miscellaneous Trash,Vegetation,2,2.0202020202020203
+Vegetation,Textile Trash,2,2.2988505747126435
+Food Organics,Vegetation,1,1.2195121951219512
+Textile Trash,Cardboard,1,1.5625
+Textile Trash,Glass,1,1.5625
+Textile Trash,Miscellaneous Trash,1,1.5625
+Food Organics,Metal,1,1.2195121951219512
+Glass,Textile Trash,1,1.1904761904761905
+Textile Trash,Vegetation,1,1.5625
+Cardboard,Miscellaneous Trash,1,1.0869565217391304
+Paper,Metal,1,1.0
+Metal,Food Organics,1,0.6329113924050633
